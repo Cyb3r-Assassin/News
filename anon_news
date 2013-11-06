@@ -1,0 +1,42 @@
+#!/bin/bash
+echo "Checking..."
+if [ -d ~/tmp ]
+  then
+    echo "Directory structure is sane"
+    if [[ -e ~/tmp/aa*.txt || ~tmp/aa*.html ]]
+      then
+	echo "Files exist. Now removing"
+	rm ~/tmp/aa*
+	echo "done"
+      else
+	echo "No lingering news we are good to go"
+    fi
+else
+    echo "making ~/tmp dir"
+    mkdir ~/tmp
+fi
+echo "Working from upstreams"
+while [ 1 ]; do wget -q http://rt.com/ -O ~/tmp/aa0.txt
+wget -q https://plus.google.com/117604887745850959716 -O ~/tmp/aa1.txt
+wget -q http://anonnews.org/ -O ~/tmp/aa2.txt
+wget -q https://twitter.com/YourAnonNews -O ~/tmp/aa3.txt
+wget -q http://darkernet.in/ -O ~/tmp/aa4.txt
+done
+concoc="meetup|snowden|protest|flashmob|operation|torrent|TPB";
+
+read -p "would you like me to email this to you? (y/n) " RESP
+if [ "$RESP" = "y" ]; then
+  egrep '( $concoc )' ~/tmp/aa*.txt | mail -s '+foo' foo@foo.com
+  echo "Cya"
+else
+  read -p "Then would you like to view this now with elinks local? (y/n) " RESP1
+  if [ "$RESP1" = "y" ]; then
+    egrep '($concoc)' ~/tmp/aa*.txt | for i in ~/tmp/aa*.txt; do mmv $i ${i/.txt/.html}; done
+    for i in ~/tmp/aa*.html; do elinks $i done
+    echo "Cya"
+  else
+    egrep '($concoc)' ~/tmp/aa*.txt | for i in ~/tmp/aa*.txt; do mmv $i ${i/.txt/.html}; done
+    echo "Cya"
+  fi
+fi
+exit
