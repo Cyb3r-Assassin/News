@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "Checking...."
+echo "Checking..."
 if [ -d ~/tmp ]
   then
     echo "Directory structure is sane"
